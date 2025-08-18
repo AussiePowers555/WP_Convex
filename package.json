@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "convex:dev": "convex dev",
+    "convex:deploy": "convex deploy",
+    "postinstall": "convex dev --until-success --run init"
   },
   "dependencies": {
     "@clerk/backend": "^2.4.1",
