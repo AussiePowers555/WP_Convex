@@ -1,334 +1,157 @@
-# Starter.diy - Elite Next.js SaaS Starter Kit
+# WP Convex - Motorbike Rental Management System
 
-A modern, production-ready SaaS starter template for building full-stack applications using Next.js 15, Convex, Clerk, and Clerk Billing. The easiest way to start accepting payments with beautiful UI and seamless integrations.
+A comprehensive web application for managing motorbike rental cases, built with Next.js, Convex, and Clerk.
 
-[🌐 Live Demo](https://elite-next-clerk-convex-starter.vercel.app/) – Try the app in your browser!
+## 🚀 Features
 
+### Core Functionality
+- **Case Management**: Track rental cases from initiation to payment
+- **Fleet Management**: Manage motorbike inventory and assignments
+- **Financial Tracking**: Monitor invoices, payments, and outstanding amounts
+- **Contact Management**: Organize lawyers, insurers, and rental companies
+- **Multi-tenant Support**: Workspace-based data isolation
+- **Real-time Updates**: Live data synchronization with Convex
 
-## Features
+### Dashboard
+- Financial overview with key metrics
+- Case status distribution charts
+- Fleet availability tracking
+- Recent cases monitoring
+- Collection rate analytics
 
-- 🚀 **Next.js 15 with App Router** - Latest React framework with server components
-- ⚡️ **Turbopack** - Ultra-fast development with hot module replacement
-- 🎨 **TailwindCSS v4** - Modern utility-first CSS with custom design system
-- 🔐 **Clerk Authentication** - Complete user management with social logins
-- 💳 **Clerk Billing** - Integrated subscription management and payments
-- 🗄️ **Convex Real-time Database** - Serverless backend with real-time sync
-- 🛡️ **Protected Routes** - Authentication-based route protection
-- 💰 **Payment Gating** - Subscription-based content access
-- 🎭 **Beautiful 404 Page** - Custom animated error page
-- 🌗 **Dark/Light Theme** - System-aware theme switching
-- 📱 **Responsive Design** - Mobile-first approach with modern layouts
-- ✨ **Custom Animations** - React Bits and Framer Motion effects
-- 🧩 **shadcn/ui Components** - Modern component library with Radix UI
-- 📊 **Interactive Dashboard** - Complete admin interface with charts
-- �� **Webhook Integration** - Automated user and payment sync
-- 🚢 **Vercel Ready** - One-click deployment
+### Case Features
+- NAF (Not-At-Fault) and AF (At-Fault) party management
+- Automatic case number generation (WWMM### format)
+- Status progression tracking
+- Bike assignment workflow
+- Financial summaries per case
+- Australian-specific fields (states, postcodes)
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-### Frontend
-- **Next.js 15** - React framework with App Router
-- **TailwindCSS v4** - Utility-first CSS framework
-- **shadcn/ui** - Modern component library
-- **Radix UI** - Accessible component primitives
-- **Framer Motion** - Smooth animations and transitions
-- **Motion Primitives** - Advanced animation components
-- **Lucide React & Tabler Icons** - Beautiful icon libraries
-- **Recharts** - Data visualization components
-- **React Bits** - Custom animation components
+- **Frontend**: Next.js 15 with TypeScript
+- **Database**: Convex (real-time, serverless)
+- **Authentication**: Clerk
+- **UI Components**: shadcn/ui with Tailwind CSS
+- **Charts**: Recharts
+- **Forms**: React Hook Form
 
-### Backend & Services
-- **Convex** - Real-time database and serverless functions
-- **Clerk** - Authentication and user management
-- **Clerk Billing** - Subscription billing and payments
-- **Svix** - Webhook handling and validation
+## 📦 Installation
 
-### Development & Deployment
-- **TypeScript** - Type safety throughout
-- **Vercel** - Deployment platform
-- **Turbopack** - Fast build tool
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+ 
-- Clerk account for authentication and billing
-- Convex account for database
-
-### Installation
-
-1. Download and set up the starter template:
-
+1. Clone the repository:
 ```bash
-# Download the template files to your project directory
-# Then navigate to your project directory and install dependencies
-npm install #or pnpm / yarn / bun
+git clone https://github.com/AussiePowers555/WP_Convex.git
+cd WP_Convex
 ```
 
-2. Set up your environment variables:
-
+2. Install dependencies:
 ```bash
-cp .env.example .env.local
+npm install
 ```
 
-3. Configure your environment variables in `.env.local`:
+3. Set up environment variables:
+Create a `.env.local` file with the following:
+```env
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
 
-3a. run `npx convex dev` or `bunx convex dev` to configure your convex database variables
-
-```bash
-# Clerk Authentication & Billing
-# Get these from your Clerk dashboard at https://dashboard.clerk.com
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_clerk_publishable_key_here
-CLERK_SECRET_KEY=sk_test_your_clerk_secret_key_here
-
-# Clerk Frontend API URL (from JWT template - see step 5)
-NEXT_PUBLIC_CLERK_FRONTEND_API_URL=https://your-clerk-frontend-api-url.clerk.accounts.dev
-
-# Clerk Redirect URLs
-NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL=/dashboard
-NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/dashboard
-NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/dashboard
-NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/dashboard
+# These will be added automatically by Convex
+# CONVEX_DEPLOYMENT=
+# NEXT_PUBLIC_CONVEX_URL=
 ```
 
-4. Initialize Convex:
-
+4. Set up Convex:
 ```bash
 npx convex dev
 ```
+This will:
+- Create a Convex project
+- Add the Convex environment variables to `.env.local`
+- Start the Convex development server
 
-5. Set up Clerk JWT Template:
-   - Go to your Clerk dashboard
-   - Navigate to JWT Templates
-   - Create a new template with name "convex"
-   - Copy the Issuer URL - this becomes your `NEXT_PUBLIC_CLERK_FRONTEND_API_URL`
-   - Add this URL to both your `.env.local` and Convex environment variables
-
-6. Set up Convex environment variables in your Convex dashboard:
-
-```bash
-# In Convex Dashboard Environment Variables
-CLERK_WEBHOOK_SECRET=whsec_your_webhook_secret_here
-NEXT_PUBLIC_CLERK_FRONTEND_API_URL=https://your-clerk-frontend-api-url.clerk.accounts.dev
-```
-
-7. Set up Clerk webhooks (in Clerk Dashboard, not Convex):
-   - Go to your Clerk dashboard → Webhooks section
-   - Create a new endpoint with URL: `https://your-deployed-app.com/api/clerk-users-webhook`
-   - Enable these events:
-     - `user.created` - Syncs new users to Convex
-     - `user.updated` - Updates user data in Convex
-     - `user.deleted` - Removes users from Convex
-     - `paymentAttempt.updated` - Tracks subscription payments
-   - Copy the webhook signing secret (starts with `whsec_`)
-   - Add it to your Convex dashboard environment variables as `CLERK_WEBHOOK_SECRET`
-   
-   **Note**: The webhook URL `/clerk-users-webhook` is handled by Convex's HTTP router, not Next.js. Svix is used to verify webhook signatures for security.
-
-8. Configure Clerk Billing:
-   - Set up your pricing plans in Clerk dashboard
-   - Configure payment methods and billing settings
-
-### Development
-
-Start the development server:
-
+5. Run the development server:
 ```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:3000`.
+6. Open [http://localhost:3000](http://localhost:3000)
 
-## Architecture
+## 🚀 Deployment on Vercel
 
-### Key Routes
-- `/` - Beautiful landing page with pricing
-- `/dashboard` - Protected user dashboard
-- `/dashboard/payment-gated` - Subscription-protected content
-- `/clerk-users-webhook` - Clerk webhook handler
+### Prerequisites
+- GitHub repository connected
+- Vercel account
+- Convex account
+- Clerk account
 
-### Authentication Flow
-- Seamless sign-up/sign-in with Clerk
-- Automatic user sync to Convex database
-- Protected routes with middleware
-- Social login support
-- Automatic redirects to dashboard after auth
+### Steps
 
-### Payment Flow
-- Custom Clerk pricing table component
-- Subscription-based access control
-- Real-time payment status updates
-- Webhook-driven payment tracking
+1. **Deploy to Vercel**:
+   - Go to [vercel.com](https://vercel.com)
+   - Click "New Project"
+   - Import the GitHub repository
+   - Name it "WP-Convex"
 
-### Database Schema
-```typescript
-// Users table
-users: {
-  name: string,
-  externalId: string // Clerk user ID
-}
+2. **Configure Environment Variables in Vercel**:
+   Add the following environment variables:
+   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+   - `CLERK_SECRET_KEY`
+   - `CONVEX_DEPLOY_KEY` (from Convex dashboard)
+   - `NEXT_PUBLIC_CONVEX_URL` (from Convex dashboard)
 
-// Payment attempts tracking
-paymentAttempts: {
-  payment_id: string,
-  userId: Id<"users">,
-  payer: { user_id: string },
-  // ... additional payment data
-}
+3. **Set up Convex Production**:
+```bash
+npx convex deploy --cmd "npm run build"
 ```
 
-## Project Structure
+4. **Configure Clerk Webhook** (if using):
+   - In Convex dashboard, add `CLERK_WEBHOOK_SECRET` as environment variable
+   - In Clerk dashboard, set webhook endpoint to your Convex HTTP endpoint
+
+## 📁 Project Structure
 
 ```
 ├── app/
-│   ├── (landing)/          # Landing page components
-│   │   ├── hero-section.tsx
-│   │   ├── features-one.tsx
-│   │   ├── pricing.tsx
-│   │   └── ...
-│   ├── dashboard/          # Protected dashboard
-│   │   ├── layout.tsx
-│   │   ├── page.tsx
-│   │   └── payment-gated/
-│   ├── globals.css         # Global styles
-│   ├── layout.tsx          # Root layout
-│   └── not-found.tsx       # Custom 404 page
+│   ├── dashboard/          # Protected dashboard area
+│   │   ├── cases/         # Case management pages
+│   │   ├── fleet/         # Fleet management (to be implemented)
+│   │   └── page.tsx       # Main dashboard
+│   └── layout.tsx         # Root layout with providers
 ├── components/
-│   ├── ui/                 # shadcn/ui components
-│   ├── custom-clerk-pricing.tsx
-│   ├── theme-provider.tsx
-│   └── ...
-├── convex/                 # Backend functions
-│   ├── schema.ts           # Database schema
-│   ├── users.ts            # User management
-│   ├── paymentAttempts.ts  # Payment tracking
-│   └── http.ts             # Webhook handlers
-├── lib/
-│   └── utils.ts            # Utility functions
-└── middleware.ts           # Route protection
+│   └── ui/               # shadcn/ui components
+├── convex/
+│   ├── schema.ts         # Database schema
+│   ├── cases.ts          # Case CRUD operations
+│   ├── bikes.ts          # Fleet management functions
+│   ├── contacts.ts       # Contact management
+│   └── workspaces.ts     # Workspace functions
+└── lib/
+    └── utils.ts          # Utility functions
 ```
 
-## Key Components
+## 🔐 Security
 
-### Landing Page
-- **Hero Section** - Animated hero with CTAs
-- **Features Section** - Interactive feature showcase
-- **Pricing Table** - Custom Clerk billing integration
-- **Testimonials** - Social proof section
-- **FAQ Section** - Common questions
-- **Footer** - Links and information
+- Authentication handled by Clerk
+- Role-based access control (admin, lawyer, rental_company, workspace_user)
+- Workspace-based data isolation
+- Secure API endpoints with authentication checks
 
-### Dashboard
-- **Sidebar Navigation** - Collapsible sidebar with user menu
-- **Interactive Charts** - Data visualization with Recharts
-- **Data Tables** - Sortable and filterable tables
-- **Payment Gating** - Subscription-based access control
+## 🌏 Australian Localization
 
-### Animations & Effects
-- **Splash Cursor** - Interactive cursor effects
-- **Animated Lists** - Smooth list animations
-- **Progressive Blur** - Modern blur effects
-- **Infinite Slider** - Continuous scrolling elements
+- Australian state selection (NSW, VIC, QLD, WA, SA, TAS, ACT, NT)
+- AUD currency formatting
+- Australian date format (DD/MM/YYYY)
+- Postcode validation
 
-## Theme Customization
+## 📝 License
 
-The starter kit includes a fully customizable theme system. You can customize colors, typography, and components using:
+Private repository - All rights reserved
 
-- **Theme Tools**: [tweakcn.com](https://tweakcn.com/editor/theme?tab=typography), [themux.vercel.app](https://themux.vercel.app/shadcn-themes), or [ui.jln.dev](https://ui.jln.dev/)
-- **Global CSS**: Modify `app/globals.css` for custom styling
-- **Component Themes**: Update individual component styles in `components/ui/`
+## 🤝 Contributing
 
-## Environment Variables
+Internal project - Please contact the repository owner for access
 
-### Required for .env.local
+## 📧 Support
 
-- `CONVEX_DEPLOYMENT` - Your Convex deployment URL
-- `NEXT_PUBLIC_CONVEX_URL` - Your Convex client URL
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk publishable key
-- `CLERK_SECRET_KEY` - Clerk secret key
-- `NEXT_PUBLIC_CLERK_FRONTEND_API_URL` - Clerk frontend API URL (from JWT template)
-- `NEXT_PUBLIC_CLERK_SIGN_IN_FORCE_REDIRECT_URL` - Redirect after sign in
-- `NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL` - Redirect after sign up
-- `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL` - Fallback redirect for sign in
-- `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL` - Fallback redirect for sign up
-
-### Required for Convex Dashboard
-
-- `CLERK_WEBHOOK_SECRET` - Clerk webhook secret (set in Convex dashboard)
-- `NEXT_PUBLIC_CLERK_FRONTEND_API_URL` - Clerk frontend API URL (set in Convex dashboard)
-
-## Deployment
-
-### Vercel Deployment (Recommended)
-
-1. Connect your repository to Vercel
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push to main branch
-
-The project is optimized for Vercel with:
-- Automatic builds with Turbopack
-- Environment variable management
-- Edge function support
-
-### Manual Deployment
-
-Build for production:
-
-```bash
-npm run build
-npm start
-```
-
-## Customization
-
-### Styling
-- Modify `app/globals.css` for global styles
-- Update TailwindCSS configuration
-- Customize component themes in `components/ui/`
-
-### Branding
-- Update logo in `components/logo.tsx`
-- Modify metadata in `app/layout.tsx`
-- Customize color scheme in CSS variables
-
-### Features
-- Add new dashboard pages in `app/dashboard/`
-- Extend database schema in `convex/schema.ts`
-- Create custom components in `components/`
-
-## Scripts
-
-- `npm run dev` - Start development server with Turbopack
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint
-
-## Why Starter.diy?
-
-**THE EASIEST TO SET UP. EASIEST IN TERMS OF CODE.**
-
-- ✅ **Clerk + Convex + Clerk Billing** make it incredibly simple
-- ✅ **No complex payment integrations** - Clerk handles everything
-- ✅ **Real-time user sync** - Webhooks work out of the box
-- ✅ **Beautiful UI** - Tailark.com inspired landing page blocks
-- ✅ **Production ready** - Authentication, payments, and database included
-- ✅ **Type safe** - Full TypeScript support throughout
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License.
-
----
-
-**Stop rebuilding the same foundation over and over.** Starter.diy eliminates weeks of integration work by providing a complete, production-ready SaaS template with authentication, payments, and real-time data working seamlessly out of the box.
-
-Built with ❤️ using Next.js 15, Convex, Clerk, and modern web technologies.
+For support, email: aussie@whitepointer.com
