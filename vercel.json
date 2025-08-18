@@ -1,9 +1,5 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "installCommand": "npm install",
-  "env": {
-    "CONVEX_DEPLOY_KEY": "@convex-deploy-key",
-    "NEXT_PUBLIC_CONVEX_URL": "@next-public-convex-url"
-  }
+  "installCommand": "npm install"
 }
