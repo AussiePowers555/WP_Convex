@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "convex dev --until-success && next build",
+    "build:prod": "next build",
     "start": "next start",
     "lint": "next lint",
     "convex:dev": "convex dev",
