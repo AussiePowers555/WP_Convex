@@ -217,7 +217,7 @@ export const assignToCase = mutation({
       assignedDate: args.assignedDate || new Date().toISOString(),
       dailyRate: args.dailyRate,
       notes: args.notes,
-      assignedBy: user._id,
+      assignedBy: user?._id || ("system" as any),
     });
 
     return assignmentId;

@@ -154,7 +154,7 @@ export const create = mutation({
       accidentLocation: args.accidentLocation,
       
       // Metadata
-      createdBy: user._id,
+      createdBy: user?._id || ("system" as any),
     });
 
     return caseId;
@@ -260,7 +260,7 @@ export const update = mutation({
       processedUpdates.afState = processedUpdates.afState as any;
     }
 
-    processedUpdates.lastUpdatedBy = user._id;
+    processedUpdates.lastUpdatedBy = user?._id || ("system" as any);
 
     await ctx.db.patch(id, processedUpdates);
   },
@@ -473,7 +473,7 @@ export const updateFinancials = mutation({
         amount: updates.paid || updates.invoiced || updates.agreed || 0,
         date: new Date().toISOString(),
         description: `Financial update: ${Object.keys(updates).join(", ")}`,
-        createdBy: user._id,
+        createdBy: user?._id || ("system" as any),
       });
     }
   },
