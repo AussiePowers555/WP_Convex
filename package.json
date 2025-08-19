@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "vercel-build": "npx convex@1.25.2 deploy --cmd 'next build'",
+    "vercel-build": "CONVEX_DEPLOY_KEY=\"${CONVEX_DEPLOY_KEY}\" npx convex@1.25.2 deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "convex:dev": "convex dev",
