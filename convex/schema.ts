@@ -89,7 +89,7 @@ export default defineSchema({
   users: defineTable({
     name: v.string(),
     email: v.string(),
-    externalId: v.string(), // Clerk ID
+    externalId: v.string(), // External user ID
     role: v.optional(userRole),
     status: v.optional(userStatus),
     workspaceId: v.optional(v.id("workspaces")),

@@ -1,19 +1,11 @@
 'use client'
 import Link from 'next/link'
 import { ChatMaxingIconColoured } from '@/components/logo'
-import { Loader2, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import React from 'react'
 import { cn } from '@/lib/utils'
-
-import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
-import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
-
-import { dark } from '@clerk/themes'
-import { useTheme } from "next-themes"
-
-
 
 const menuItems = [
     { name: 'Features', href: '#link' },
@@ -25,11 +17,6 @@ const menuItems = [
 export const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
     const [isScrolled, setIsScrolled] = React.useState(false)
-    const { theme } = useTheme()
-
-    const appearance = {
-        baseTheme: theme === "dark" ? dark : undefined,
-    }
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -38,6 +25,7 @@ export const HeroHeader = () => {
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
+    
     return (
         <header>
             <nav
@@ -48,98 +36,46 @@ export const HeroHeader = () => {
                         <div className="flex w-full justify-between lg:w-auto">
                             <Link
                                 href="/"
-                                aria-label="home"
-                                className="flex items-center space-x-2">
+                                aria-label="logo"
+                                className="flex items-center space-x-2"
+                            >
                                 <ChatMaxingIconColoured />
-                                <span className="text-xl font-medium">Starter.diy</span>
-                                <Badge variant="outline" className="text-muted-foreground  text-xs">Demo</Badge>
+                                <span className="text-2xl font-bold">Logo</span>
+                                <Badge variant="outline" className="ml-3 hidden sm:block">
+                                    v1.0.0
+                                </Badge>
                             </Link>
-
-                            <button
+                            <Button
+                                variant="ghost"
+                                className="lg:hidden"
                                 onClick={() => setMenuState(!menuState)}
-                                aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
-                                className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
-                                <Menu className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
-                                <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
-                            </button>
+                                aria-label="Toggle Menu"
+                            >
+                                {menuState ? <X /> : <Menu />}
+                            </Button>
                         </div>
-
-                        <div className="absolute inset-0 m-auto hidden size-fit lg:block">
-                            <ul className="flex gap-8 text-sm">
-                                {menuItems.map((item, index) => (
-                                    <li key={index}>
+                        <div
+                            className={cn(
+                                "max-lg:absolute max-lg:top-full max-lg:mt-1 flex-col rounded-2xl border border-zinc-100 p-8 shadow-2xl dark:border-zinc-800 lg:flex max-lg:w-full lg:flex-row lg:items-center lg:gap-6 lg:border-none lg:p-0 lg:shadow-none",
+                                menuState ? "flex" : "hidden"
+                            )}
+                        >
+                            <ul className="flex flex-col gap-6 text-zinc-900 dark:text-zinc-300 lg:flex-row lg:gap-0">
+                                {menuItems.map((item, idx) => (
+                                    <li key={idx}>
                                         <Link
                                             href={item.href}
-                                            className="text-muted-foreground hover:text-accent-foreground block duration-150">
-                                            <span>{item.name}</span>
+                                            className="duration-300 hover:text-zinc-900 dark:hover:text-zinc-50 lg:px-6"
+                                        >
+                                            {item.name}
                                         </Link>
                                     </li>
                                 ))}
                             </ul>
-                        </div>
-
-                        <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none dark:shadow-none dark:lg:bg-transparent">
-                            <div className="lg:hidden">
-                                <ul className="space-y-6 text-base">
-                                    {menuItems.map((item, index) => (
-                                        <li key={index}>
-                                            <Link
-                                                href={item.href}
-                                                className="text-muted-foreground hover:text-accent-foreground block duration-150">
-                                                <span>{item.name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <AuthLoading>
-                                    <div className="flex items-center justify-center">
-                                        <Loader2 className="size-8 p-2 animate-spin" />
-                                    </div>
-                                </AuthLoading>
-                                <Authenticated>
-                                    <Button asChild size="sm">
-                                        <Link href="/dashboard">
-                                            <span>Dashboard</span>
-                                        </Link>
-                                    </Button>
-                                    <UserButton appearance={appearance} />
-                                </Authenticated>
-
-                                <Unauthenticated>
-                                    <SignInButton mode="modal">
-                                        <Button
-                                            asChild
-                                            variant="outline"
-                                            size="sm"
-                                            className={cn(isScrolled && 'lg:hidden')}>
-                                            <Link href="#">
-                                                <span>Login</span>
-                                            </Link>
-                                        </Button>
-                                    </SignInButton>
-                                    <SignUpButton mode="modal">
-                                        <Button
-                                            asChild
-                                            size="sm"
-                                            className={cn(isScrolled && 'lg:hidden')}>
-                                            <Link href="#">
-                                                <span>Sign Up</span>
-                                            </Link>
-                                        </Button>
-                                    </SignUpButton>
-                                    <SignUpButton mode="modal">
-                                        <Button
-                                            asChild
-                                            size="sm"
-                                            className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                            <Link href="#">
-                                                <span>Get Started</span>
-                                            </Link>
-                                        </Button>
-                                    </SignUpButton>
-                                </Unauthenticated>
+                            <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center lg:mt-0">
+                                <Link href="/dashboard">
+                                    <Button>Go to Dashboard</Button>
+                                </Link>
                             </div>
                         </div>
                     </div>

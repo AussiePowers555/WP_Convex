@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
-import { ClerkProvider } from '@clerk/nextjs'
 import ConvexClientProvider from '@/components/ConvexClientProvider'
 
 
@@ -38,11 +37,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ClerkProvider>
-            <ConvexClientProvider>
-              {children}
-            </ConvexClientProvider>
-          </ClerkProvider>
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
         </ThemeProvider>
       </body>
     </html>

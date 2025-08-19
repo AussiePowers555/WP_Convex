@@ -12,9 +12,6 @@
     "convex:deploy": "convex deploy"
   },
   "dependencies": {
-    "@clerk/backend": "^2.4.1",
-    "@clerk/nextjs": "^6.24.0",
-    "@clerk/themes": "^2.2.55",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
@@ -49,7 +46,6 @@
     "react-use-measure": "^2.1.7",
     "recharts": "^2.15.4",
     "sonner": "^2.0.6",
-    "svix": "^1.69.0",
     "tailwind-merge": "^3.3.1",
     "vaul": "^1.1.2",
     "zod": "^3.25.76"
