@@ -100,15 +100,16 @@ export const list = query({
     active: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db.query("workspaces");
-
+    let workspaces;
+    
     if (args.active !== undefined) {
-      query = query.withIndex("byActive", (q) => 
-        q.eq("active", args.active!)
-      );
+      workspaces = await ctx.db
+        .query("workspaces")
+        .withIndex("byActive", (q) => q.eq("active", args.active!))
+        .collect();
+    } else {
+      workspaces = await ctx.db.query("workspaces").collect();
     }
-
-    const workspaces = await query.collect();
 
     // Fetch contact details for each workspace
     const enrichedWorkspaces = await Promise.all(

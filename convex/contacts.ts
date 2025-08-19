@@ -109,15 +109,16 @@ export const list = query({
     searchTerm: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db.query("contacts");
-
+    let contacts;
+    
     if (args.type) {
-      query = query.withIndex("byType", (q) => 
-        q.eq("type", args.type as any)
-      );
+      contacts = await ctx.db
+        .query("contacts")
+        .withIndex("byType", (q) => q.eq("type", args.type as any))
+        .collect();
+    } else {
+      contacts = await ctx.db.query("contacts").collect();
     }
-
-    let contacts = await query.collect();
 
     if (args.searchTerm) {
       const search = args.searchTerm.toLowerCase();

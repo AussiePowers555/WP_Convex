@@ -272,23 +272,29 @@ export const list = query({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db.query("cases");
-
-    // Filter by workspace if provided
-    if (args.workspaceId) {
-      query = query.withIndex("byWorkspace", (q) => 
-        q.eq("workspaceId", args.workspaceId!)
-      );
+    let cases;
+    
+    // Apply filters based on arguments
+    if (args.workspaceId && args.status) {
+      // Can't use multiple indexes, so filter by workspace then filter in memory
+      cases = await ctx.db
+        .query("cases")
+        .withIndex("byWorkspace", (q) => q.eq("workspaceId", args.workspaceId!))
+        .collect();
+      cases = cases.filter(c => c.status === args.status);
+    } else if (args.workspaceId) {
+      cases = await ctx.db
+        .query("cases")
+        .withIndex("byWorkspace", (q) => q.eq("workspaceId", args.workspaceId!))
+        .collect();
+    } else if (args.status) {
+      cases = await ctx.db
+        .query("cases")
+        .withIndex("byStatus", (q) => q.eq("status", args.status as any))
+        .collect();
+    } else {
+      cases = await ctx.db.query("cases").collect();
     }
-
-    // Filter by status if provided
-    if (args.status) {
-      query = query.withIndex("byStatus", (q) => 
-        q.eq("status", args.status as any)
-      );
-    }
-
-    let cases = await query.collect();
 
     // Apply search filter if provided
     if (args.searchTerm) {
@@ -400,15 +406,16 @@ export const getStats = query({
     workspaceId: v.optional(v.id("workspaces")),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db.query("cases");
-
+    let cases;
+    
     if (args.workspaceId) {
-      query = query.withIndex("byWorkspace", (q) => 
-        q.eq("workspaceId", args.workspaceId!)
-      );
+      cases = await ctx.db
+        .query("cases")
+        .withIndex("byWorkspace", (q) => q.eq("workspaceId", args.workspaceId!))
+        .collect();
+    } else {
+      cases = await ctx.db.query("cases").collect();
     }
-
-    const cases = await query.collect();
 
     const totalCases = cases.length;
     const totalInvoiced = cases.reduce((sum, c) => sum + c.invoiced, 0);
