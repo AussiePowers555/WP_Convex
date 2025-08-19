@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
-  "buildCommand": "bash build-convex.sh",
+  "buildCommand": "node deploy-convex.js",
   "installCommand": "npm install"
 } 

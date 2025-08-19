@@ -123,15 +123,18 @@ export const list = query({
     searchTerm: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db.query("bikes");
-
+    let bikes;
+    
     if (args.status) {
-      query = query.withIndex("byStatus", (q) => 
-        q.eq("status", args.status as any)
-      );
+      bikes = await ctx.db
+        .query("bikes")
+        .withIndex("byStatus", (q) => 
+          q.eq("status", args.status as any)
+        )
+        .collect();
+    } else {
+      bikes = await ctx.db.query("bikes").collect();
     }
-
-    let bikes = await query.collect();
 
     if (args.searchTerm) {
       const search = args.searchTerm.toLowerCase();
