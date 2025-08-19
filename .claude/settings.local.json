@@ -10,7 +10,8 @@
       "Bash(npx convex:*)",
       "Bash(cat:*)",
       "Bash(vercel:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []
