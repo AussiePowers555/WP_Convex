@@ -1,3 +1,5 @@
 {
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "buildCommand": "npx convex@1.25.2 deploy --cmd 'npm run build'",
+  "installCommand": "npm install"
 } 
