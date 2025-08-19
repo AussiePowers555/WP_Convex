@@ -38,7 +38,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ClerkProvider>
+          <ClerkProvider
+            isSatellite={process.env.NODE_ENV === 'production'}
+            domain={process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_VERCEL_URL || 'wp-convex.vercel.app' : undefined}
+          >
             <ConvexClientProvider>
               {children}
             </ConvexClientProvider>
