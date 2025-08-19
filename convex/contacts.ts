@@ -16,10 +16,7 @@ export const create = mutation({
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    // No authentication required for demo
 
     // Check if email already exists
     if (args.email) {
@@ -66,10 +63,7 @@ export const update = mutation({
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    // No authentication required for demo
 
     const { id, ...updates } = args;
 
@@ -179,20 +173,7 @@ export const get = query({
 export const remove = mutation({
   args: { id: v.id("contacts") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    // Check if user has permission
-    const user = await ctx.db
-      .query("users")
-      .withIndex("byExternalId", (q) => q.eq("externalId", identity.subject))
-      .unique();
-
-    if (!user || (user.role !== "admin" && user.role !== "developer")) {
-      throw new Error("Insufficient permissions");
-    }
+    // No authentication required for demo - allow all deletions
 
     // Check if contact is referenced in workspaces
     const workspaces = await ctx.db

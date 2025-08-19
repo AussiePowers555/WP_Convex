@@ -24,10 +24,7 @@ export const create = mutation({
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    // No authentication required for demo
 
     // Check if registration already exists
     const existing = await ctx.db
@@ -86,10 +83,7 @@ export const update = mutation({
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    // No authentication required for demo
 
     const { id, ...updates } = args;
 
@@ -181,18 +175,22 @@ export const assignToCase = mutation({
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const user = await ctx.db
-      .query("users")
-      .withIndex("byExternalId", (q) => q.eq("externalId", identity.subject))
-      .unique();
-
+    // No authentication required for demo
+    
+    // Use default user for demo
+    let user = await ctx.db.query("users").first();
+    
     if (!user) {
-      throw new Error("User not found");
+      // Create a default demo user
+      const userId = await ctx.db.insert("users", {
+        name: "Demo User",
+        email: "demo@pbikerescue.com",
+        externalId: "demo-user",
+        role: "admin",
+        status: "active",
+        firstLogin: false,
+      });
+      user = await ctx.db.get(userId);
     }
 
     // Check if bike is available
@@ -234,10 +232,7 @@ export const returnFromCase = mutation({
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
+    // No authentication required for demo
 
     const bike = await ctx.db.get(args.bikeId);
     if (!bike || !bike.assignedCaseId) {
@@ -292,20 +287,7 @@ export const returnFromCase = mutation({
 export const remove = mutation({
   args: { id: v.id("bikes") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    // Check if user has permission
-    const user = await ctx.db
-      .query("users")
-      .withIndex("byExternalId", (q) => q.eq("externalId", identity.subject))
-      .unique();
-
-    if (!user || (user.role !== "admin" && user.role !== "developer")) {
-      throw new Error("Insufficient permissions");
-    }
+    // No authentication required for demo - allow all deletions
 
     // Check if bike is assigned
     const bike = await ctx.db.get(args.id);

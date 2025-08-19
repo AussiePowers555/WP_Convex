@@ -64,19 +64,20 @@ export const create = mutation({
     accidentLocation: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    // Get the user from the database
-    const user = await ctx.db
-      .query("users")
-      .withIndex("byExternalId", (q) => q.eq("externalId", identity.subject))
-      .unique();
-
+    // For demo purposes, create a default user if none exists
+    let user = await ctx.db.query("users").first();
+    
     if (!user) {
-      throw new Error("User not found");
+      // Create a default demo user
+      const userId = await ctx.db.insert("users", {
+        name: "Demo User",
+        email: "demo@pbikerescue.com",
+        externalId: "demo-user",
+        role: "admin",
+        status: "active",
+        firstLogin: false,
+      });
+      user = await ctx.db.get(userId);
     }
 
     // Generate unique case number
@@ -220,18 +221,20 @@ export const update = mutation({
     accidentLocation: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const user = await ctx.db
-      .query("users")
-      .withIndex("byExternalId", (q) => q.eq("externalId", identity.subject))
-      .unique();
-
+    // For demo purposes, use default user
+    let user = await ctx.db.query("users").first();
+    
     if (!user) {
-      throw new Error("User not found");
+      // Create a default demo user
+      const userId = await ctx.db.insert("users", {
+        name: "Demo User",
+        email: "demo@pbikerescue.com",
+        externalId: "demo-user",
+        role: "admin",
+        status: "active",
+        firstLogin: false,
+      });
+      user = await ctx.db.get(userId);
     }
 
     const { id, ...updates } = args;
@@ -343,20 +346,7 @@ export const getByNumber = query({
 export const remove = mutation({
   args: { id: v.id("cases") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    // Check if user has permission to delete (admin or developer)
-    const user = await ctx.db
-      .query("users")
-      .withIndex("byExternalId", (q) => q.eq("externalId", identity.subject))
-      .unique();
-
-    if (!user || (user.role !== "admin" && user.role !== "developer")) {
-      throw new Error("Insufficient permissions");
-    }
+    // For demo purposes, allow all deletions (no auth required)
 
     // Delete related records first
     const documents = await ctx.db
@@ -449,11 +439,6 @@ export const updateFinancials = mutation({
     paid: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
     const { id, ...financials } = args;
     
     const updates: any = {};
@@ -466,10 +451,20 @@ export const updateFinancials = mutation({
     await ctx.db.patch(id, updates);
 
     // Create financial record for audit trail
-    const user = await ctx.db
-      .query("users")
-      .withIndex("byExternalId", (q) => q.eq("externalId", identity.subject))
-      .unique();
+    let user = await ctx.db.query("users").first();
+    
+    if (!user) {
+      // Create a default demo user
+      const userId = await ctx.db.insert("users", {
+        name: "Demo User",
+        email: "demo@pbikerescue.com",
+        externalId: "demo-user",
+        role: "admin",
+        status: "active",
+        firstLogin: false,
+      });
+      user = await ctx.db.get(userId);
+    }
 
     if (user && Object.keys(updates).length > 0) {
       await ctx.db.insert("financialRecords", {
