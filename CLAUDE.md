@@ -78,10 +78,37 @@ convex/
 - `NEXT_PUBLIC_CLERK_FRONTEND_API_URL` (from Clerk JWT template)
 - `CLERK_WEBHOOK_SECRET` (set in Convex dashboard)
 
-### Webhook Configuration
-Clerk webhooks must be configured to:
-- Endpoint: `{your_domain}/api/clerk-users-webhook`
-- Events: `user.created`, `user.updated`, `user.deleted`, `paymentAttempt.updated`
+### Clerk + Convex Setup Steps
+
+#### 1. Clerk JWT Template Configuration
+- In Clerk Dashboard, create a JWT template
+- **CRITICAL**: Name it exactly `convex` (do NOT rename)
+- Copy the Issuer URL (Format: `https://verb-noun-00.clerk.accounts.dev`)
+
+#### 2. Convex Environment Variables
+Set these in Convex Dashboard (https://dashboard.convex.dev/settings/environment-variables):
+- `NEXT_PUBLIC_CLERK_FRONTEND_API_URL` = The Issuer URL from Clerk JWT template
+- `CLERK_WEBHOOK_SECRET` = Signing secret from Clerk webhook configuration
+
+#### 3. Webhook Configuration
+- **Convex HTTP Webhook URL**: `https://[your-deployment].convex.site/clerk-users-webhook`
+- For this project: `https://keen-axolotl-228.convex.site/clerk-users-webhook`
+- In Clerk Dashboard → Webhooks → Add Endpoint with this URL
+- Select events: `user.created`, `user.updated`, `user.deleted`
+- Copy the Signing Secret to use as `CLERK_WEBHOOK_SECRET`
+
+#### 4. Auth Configuration
+The `convex/auth.config.ts` file must reference the Clerk domain:
+```typescript
+export default {
+  providers: [
+    {
+      domain: process.env.NEXT_PUBLIC_CLERK_FRONTEND_API_URL,
+      applicationID: "convex",
+    },
+  ]
+};
+```
 
 ### Real-time Data Flow
 1. UI components use Convex hooks (`useQuery`, `useMutation`)
