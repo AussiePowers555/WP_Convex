@@ -379,15 +379,21 @@ export const getAssignmentHistory = query({
     caseId: v.optional(v.id("cases")),
   },
   handler: async (ctx, args) => {
-    let query = ctx.db.query("bikeAssignments");
-
+    let assignments;
+    
     if (args.bikeId) {
-      query = query.withIndex("byBike", (q) => q.eq("bikeId", args.bikeId));
+      assignments = await ctx.db
+        .query("bikeAssignments")
+        .withIndex("byBike", (q) => q.eq("bikeId", args.bikeId!))
+        .collect();
     } else if (args.caseId) {
-      query = query.withIndex("byCase", (q) => q.eq("caseId", args.caseId));
+      assignments = await ctx.db
+        .query("bikeAssignments")
+        .withIndex("byCase", (q) => q.eq("caseId", args.caseId!))
+        .collect();
+    } else {
+      assignments = await ctx.db.query("bikeAssignments").collect();
     }
-
-    const assignments = await query.collect();
 
     // Sort by assigned date (newest first)
     assignments.sort((a, b) => 
