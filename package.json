@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
+    "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "vercel-build": "CONVEX_DEPLOY_KEY=\"${CONVEX_DEPLOY_KEY}\" npx convex@1.25.2 deploy && next build",
     "start": "next start",
@@ -39,7 +40,7 @@
     "@tanstack/react-table": "^8.21.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "convex": "^1.25.2",
+    "convex": "^1.25.4",
     "framer-motion": "^12.23.3",
     "lucide-react": "^0.525.0",
     "motion": "^12.23.0",
