@@ -18,8 +18,6 @@ import type * as cases from "../cases.js";
 import type * as contacts from "../contacts.js";
 import type * as http from "../http.js";
 import type * as init from "../init.js";
-import type * as paymentAttemptTypes from "../paymentAttemptTypes.js";
-import type * as paymentAttempts from "../paymentAttempts.js";
 import type * as users from "../users.js";
 import type * as workspaces from "../workspaces.js";
 
@@ -37,8 +35,6 @@ declare const fullApi: ApiFromModules<{
   contacts: typeof contacts;
   http: typeof http;
   init: typeof init;
-  paymentAttemptTypes: typeof paymentAttemptTypes;
-  paymentAttempts: typeof paymentAttempts;
   users: typeof users;
   workspaces: typeof workspaces;
 }>;
