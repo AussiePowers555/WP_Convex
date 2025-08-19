@@ -29,13 +29,14 @@ http.route({
         break;
       }
 
-      case "paymentAttempt.updated": {
-        const paymentAttemptData = transformWebhookData((event as any).data);
-        await ctx.runMutation(internal.paymentAttempts.savePaymentAttempt, {
-          paymentAttemptData,
-        });
-        break;
-      }
+      // Payment attempts are not implemented yet
+      // case "paymentAttempt.updated": {
+      //   const paymentAttemptData = transformWebhookData((event as any).data);
+      //   await ctx.runMutation(internal.paymentAttempts.savePaymentAttempt, {
+      //     paymentAttemptData,
+      //   });
+      //   break;
+      // }
       
 
       
